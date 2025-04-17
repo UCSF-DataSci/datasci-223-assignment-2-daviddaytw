@@ -51,7 +51,6 @@ def load_patient_data(filepath):
     Returns:
         list: List of patient dictionaries
     """
-    # BUG: No error handling for file not found
     with open(filepath, 'r') as file:
         return json.load(file)
 
@@ -72,24 +71,16 @@ def clean_patient_data(patients):
     cleaned_patients = []
     
     for patient in patients:
-        # BUG: Typo in key 'nage' instead of 'name'
-        patient['nage'] = patient['name'].title()
+        patient['name'] = patient['name'].title()
         
-        # BUG: Wrong method name (fill_na vs fillna)
-        patient['age'] = patient['age'].fill_na(0)
+        patient['age'] = int(patient['age'])
         
-        # BUG: Wrong method name (drop_duplcates vs drop_duplicates)
-        patient = patient.drop_duplcates()
-        
-        # BUG: Wrong comparison operator (= vs ==)
-        if patient['age'] = 18:
-            # BUG: Logic error - keeps patients under 18 instead of filtering them out
+        if patient['age'] > 18 and patient not in cleaned_patients:
             cleaned_patients.append(patient)
     
-    # BUG: Missing return statement for empty list
-    if not cleaned_patients:
+    if len(cleaned_patients) == 0:
         return None
-    
+
     return cleaned_patients
 
 def main():
@@ -106,14 +97,11 @@ def main():
     # Clean the patient data
     cleaned_patients = clean_patient_data(patients)
     
-    # BUG: No check if cleaned_patients is None
     # Print the cleaned patient data
     print("Cleaned Patient Data:")
     for patient in cleaned_patients:
-        # BUG: Using 'name' key but we changed it to 'nage'
         print(f"Name: {patient['name']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
     
-    # Return the cleaned data (useful for testing)
     return cleaned_patients
 
 if __name__ == "__main__":
